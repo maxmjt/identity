@@ -1,0 +1,59 @@
+server:
+  port: 9595
+
+spring:
+  profiles:
+    active: default
+  application:
+    name: mio-identity
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 100
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 60s
+        permitted-number-of-calls-in-half-open-state: 10
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 20s
+  timelimiter:
+    configs:
+      default:
+        timeout-duration: 30s
+
+password:
+  pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){8,15}$
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      base-path: /
+      exposure:
+        include: '*'
+
+springdoc:
+  swagger-ui:
+    csrf:
+      enabled: true
+  api-docs:
+    enabled: true
+
+debug: true
